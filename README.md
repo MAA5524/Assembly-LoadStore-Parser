@@ -1,7 +1,3 @@
-This is a professional and comprehensive **README.md** file tailored for your GitHub repository. It highlights the technical depth of your project, the modern UI, and the compiler logic you've implemented.
-
----
-
 # 🛠️ Assembly Load/Store Parser & Visualizer
 
 A modern, Python-based compiler simulator designed to analyze and visualize **x86 Load/Store instructions**. This tool performs lexical analysis, simulates a bottom-up **Shift-Reduce parser**, and renders a dynamic **Graphical Parse Tree**.
