@@ -1,49 +1,55 @@
-# 🛠️ Assembly Load/Store Parser & Visualizer
+This is the updated **README.md** file for your GitHub repository. It now includes the advanced features we added, such as **Automata Visualization (NFA/DFA)**, **Zooming functionality**, and **Strict Semantic Validation**.
 
-A modern, Python-based compiler simulator designed to analyze and visualize **x86 Load/Store instructions**. This tool performs lexical analysis, simulates a bottom-up **Shift-Reduce parser**, and renders a dynamic **Graphical Parse Tree**.
+---
+
+# 🛠️ Pro Assembly Load/Store Parser & Automata Visualizer
+
+An advanced, Python-based compiler engine designed to analyze and visualize **x86 Load/Store instructions**. This tool goes beyond simple parsing by offering **Lexer NFA** and **LR Parser DFA** visualizations, alongside a robust **Shift-Reduce** simulation.
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![UI](https://img.shields.io/badge/UI-CustomTkinter-orange.svg)
+![Automata](https://img.shields.io/badge/Automata-NFA%20%26%20DFA-red.svg)
 ![Parser](https://img.shields.io/badge/Parser-Shift--Reduce-green.svg)
 
-## 🚀 Features
+## 🚀 Key Features
 
-*   **Multi-Line Parsing:** Analyze entire assembly blocks, not just single lines.
-*   **Instruction Support:** Full support for `MOV`, `PUSH`, `POP`, `XCHG`, and `LEA`.
-*   **Graphical Parse Tree:** Real-time rendering of the derivation tree using a colored Canvas with horizontal/vertical scrolling.
-*   **Step-by-Step Parse Table:** A detailed `Treeview` table showing the **Stack Content**, **Input Buffer**, and **Action Taken** at every step.
-*   **Instruction Builder:** A GUI-based tool to generate valid assembly code without manual typing errors.
-*   **Semantic Validation:** Specialized logic for `XCHG` instructions:
-    *   ❌ Prevents Memory-to-Memory transfers.
-    *   ❌ Prevents use of Immediate data (numbers) in XCHG.
-    *   ✅ Validates register size matching (e.g., 8-bit vs 16-bit).
+*   **Multi-Line Parsing:** Fully analyzes complex assembly blocks with recursive program handling.
+*   **Automata Visualization:** 
+    *   **Lexer NFA:** Visualizes the Non-deterministic Finite Automata used for token recognition.
+    *   **Parser DFA:** Renders the LR(0) State Machine (DFA) showing Item Sets and transitions.
+*   **Dynamic Zooming System:** Integrated **Zoom +** and **Zoom -** buttons for NFA and DFA diagrams to handle complex visualizations.
+*   **Graphical Parse Tree:** Real-time rendering of the derivation tree with a dedicated root-to-leaf colored structure.
+*   **Professional Parse Table:** A high-fidelity `Treeview` table displaying the **Stack**, **Input Buffer**, and **Parser Actions** with optimized row spacing for readability.
+*   **Strict Semantic Validation:**
+    *   **XCHG Logic:** Prevents Mem-to-Mem transfers, Immediate data usage, and Register size mismatches (e.g., 8-bit vs 16-bit).
+    *   **LEA Logic:** Ensures destination is a Register and source is a Memory address.
+    *   **POP Logic:** Prevents popping values directly into Immediate (Number) operands.
 
 ## 📋 Supported Instruction Set
 
-| Mnemonic | Description | Example |
+| Mnemonic | Description | Strict Rules |
 | :--- | :--- | :--- |
-| **MOV** | Data transfer between reg/mem/imm | `MOV AX, 10` |
-| **PUSH** | Store operand onto the stack | `PUSH AX` |
-| **POP** | Load operand from the stack | `POP BX` |
-| **XCHG** | Exchange contents of two operands | `XCHG AX, BX` |
-| **LEA** | Load Effective Address | `LEA SI, [BX]` |
+| **MOV** | Data transfer | Standard x86 rules |
+| **PUSH** | Store onto stack | Reg/Mem/Imm supported |
+| **POP** | Load from stack | Destination cannot be Immediate |
+| **XCHG** | Swap contents | No Mem-to-Mem, No Imm, Size must match |
+| **LEA** | Load Effective Address | Dest: Reg only, Src: Mem only |
 
 ## 🏗️ Grammar (CFG)
 
-The parser is based on the following Context-Free Grammar:
+The system is built upon a recursive Context-Free Grammar:
 
 ```bnf
-<Program>     ::= <StmtList>
-<StmtList>    ::= <Instruction> NEWLINE <StmtList> | <Instruction>
-<Instruction> ::= <DualOp> | <SingleOp>
-<DualOp>      ::= <OpCode2> <Dest> , <Source>
-<SingleOp>    ::= <OpCode1> <Operand>
-<OpCode2>     ::= MOV | XCHG | LEA
-<OpCode1>     ::= PUSH | POP
-<Dest>        ::= <Register> | <Memory>
-<Source>      ::= <Register> | <Memory> | <Number>
-<Register>    ::= AX | BX | CX | DX | AL | BL ...
-<Memory>      ::= [ <Register> ]
+<Program>      ::= <StmtList>
+<StmtList>     ::= <Instruction> NEWLINE <StmtList> | <Instruction>
+<Instruction>  ::= <DualOp> | <SingleOp>
+<DualOp>       ::= <OpCode2> <Dest> , <Source>
+<SingleOp>     ::= <OpCode1> <Operand>
+<OpCode2>      ::= MOV | XCHG | LEA
+<OpCode1>      ::= PUSH | POP
+<Dest/Source>  ::= <Register> | <Memory> | <Number>
+<Register>     ::= AX, BX, CX, DX, AL, BL, SI, DI...
+<Memory>       ::= [ <Register> ]
 ```
 
 ## 🛠️ Installation
@@ -55,7 +61,6 @@ The parser is based on the following Context-Free Grammar:
    ```
 
 2. **Install dependencies:**
-   This project requires `customtkinter`.
    ```bash
    pip install customtkinter
    ```
@@ -67,22 +72,25 @@ The parser is based on the following Context-Free Grammar:
 
 ## 🖥️ How to Use
 
-1. **Code Builder:** Use the dropdown menus to select an operation and operands. Click **"ADD LINE"** to insert it into the editor.
-2. **Editor:** You can also manually type or edit your assembly code in the text area.
-3. **Analysis:** Click **"RUN ANALYSIS"**.
-4. **Lexical Tab:** View the generated tokens (Mnemonic, Register, Comma, etc.).
-5. **Parse Table:** Observe how the Stack evolves and which Shift/Reduce actions are triggered.
-6. **Parse Tree:** Explore the hierarchical structure of your program in the graphical tree view.
+1. **Code Editor:** Type your assembly code or use the **Instruction Builder** to insert valid lines.
+2. **Analysis:** Click **"RUN ANALYSIS"**.
+3. **Tabs Exploration:**
+    *   **Lexical:** Check the token stream.
+    *   **Parse Table:** See the Shift-Reduce stack transitions.
+    *   **Parse Tree:** View the hierarchical program structure.
+    *   **Lexer NFA:** Explore the token recognition states.
+    *   **Parser DFA:** Study the LR state machine (Use **Zoom** for details).
 
 ## 🤖 Technical Implementation
 
-*   **Lexical Analyzer (Lexer):** Uses Regular Expressions (Regex) to tokenize the input stream.
-*   **Syntax Analyzer (Parser):** Implements a recursive-descent approach to handle multi-line programs, combined with a stack-based simulation to visualize Shift-Reduce transitions.
-*   **UI Framework:** Built with `CustomTkinter` for a professional dark-themed experience and `Tkinter.Canvas` for high-performance tree rendering.
+*   **Lexer:** Built with Python `re` (Regex) module, simulating an NFA-based scanner.
+*   **Parser:** Implements a bottom-up Shift-Reduce logic with recursive multi-line statement handling.
+*   **Visualization Engine:** Custom-built zooming and scaling engine using `Tkinter.Canvas` for vector-like drawing of nodes and transitions.
+*   **GUI:** Powered by `CustomTkinter` for a modern, responsive Dark-themed interface.
 
 ## 🤝 Author
 **MAA5524**  
-*Computer Science / Compiler Design Project*
+*Computer Science / Compiler Design & Automata Theory Project*
 
 ---
 *If you find this project helpful, feel free to ⭐ the repository!*
