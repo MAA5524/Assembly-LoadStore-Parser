@@ -1,6 +1,3 @@
-This is the updated **README.md** file for your GitHub repository. It now includes the advanced features we added, such as **Automata Visualization (NFA/DFA)**, **Zooming functionality**, and **Strict Semantic Validation**.
-
----
 
 # 🛠️ Pro Assembly Load/Store Parser & Automata Visualizer
 
